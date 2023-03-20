@@ -33,6 +33,7 @@ namespace Wba.Forms.Web.Controllers
             return View(authenticationRegisterViewModel);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Register(AuthenticationRegisterViewModel 
             authenticationRegisterViewModel)
         {
@@ -46,6 +47,39 @@ namespace Wba.Forms.Web.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public IActionResult Login() 
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(AuthenticationLoginViewModel 
+            authenticationLoginViewModel)
+        {
+            //check modelstate
+            if(!ModelState.IsValid)
+            {
+                return View(authenticationLoginViewModel);
+            }
+            //check credentials
+            if(authenticationLoginViewModel.Username
+                .Equals("jules@verne.com") &&
+                authenticationLoginViewModel.Password.Equals("unsafe123"))
+            {
+                //redirect to loginSuccess
+                return RedirectToAction("LoginSuccess");
+            }
+            //wrong credentials, add modelstate error
+            ModelState.AddModelError("", "Wrong credentials!");
+            return View(authenticationLoginViewModel);
+        }
+        [HttpGet]
+        public IActionResult LoginSuccess()
+        {
+            return View();
+        }
+
     }
 }
     
